@@ -119,7 +119,6 @@ type ResultListMethod struct {
 
 func ValidationParamsListMethod(params ParamsListMethod) ResultListMethod {
 	/*
-
 		How To Use
 		params := utils.ValidationParamsListMethod(utils.ParamsListMethod{
 			Search: nil,
@@ -130,7 +129,6 @@ func ValidationParamsListMethod(params ParamsListMethod) ResultListMethod {
 		})
 
 		fmt.Println(*params.Search)
-
 	*/
 
 	Search := ""

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	schemasql "github.com/enrichoalkalas01/learn-go-fiber.git/models/schema-sql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -21,21 +22,21 @@ func PGConnection() {
 		log.Fatal("Failed to connect to the database pg : ", err)
 	}
 
-	if !tableExists("categories") {
-		if err := database.AutoMigrate(&Category{}); err != nil {
+	if !TableExists("categories") {
+		if err := database.AutoMigrate(&schemasql.Category{}); err != nil {
 			log.Fatal("Failed to migrate Category:", err)
 		}
 	}
 
-	if !tableExists("products") {
-		if err := database.AutoMigrate(&Product{}); err != nil {
+	if !TableExists("products") {
+		if err := database.AutoMigrate(&schemasql.Product{}); err != nil {
 			log.Fatal("Failed to migrate Product:", err)
 		}
 	}
 }
 
 // Check Table Exist For Migrations
-func tableExists(tableName string) bool {
+func TableExists(tableName string) bool {
 	var count int64
 	err := database.Raw(fmt.Sprintf("SELECT COUNT(*) FROM information_schema.tables WHERE table_name = '%s'", tableName)).Scan(&count).Error
 	if err != nil {
@@ -48,4 +49,19 @@ func tableExists(tableName string) bool {
 // Function to useable use database
 func PGDatabase() *gorm.DB {
 	return database
+}
+
+// Function for close connection from database
+func PGCloseConnection() {
+	SQLDB, err := database.DB()
+	if err != nil {
+		log.Fatal("Failed to get SQL DB instance : ", err)
+		return
+	}
+
+	if err := SQLDB.Close(); err != nil {
+		log.Fatal("Failed to cose database connection : ", err)
+	} else {
+		log.Println("Database connection closed successfully")
+	}
 }
