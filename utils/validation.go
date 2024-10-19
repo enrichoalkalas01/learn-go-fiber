@@ -47,7 +47,7 @@ func ValidationIdParams(c *fiber.Ctx) (int, error) {
 	idParams := c.Params("id", "")
 
 	id, err := strconv.Atoi(idParams)
-	if err == nil {
+	if err != nil {
 		return 0, errors.New("invalid id params, params must be integer")
 	}
 
@@ -98,5 +98,81 @@ func generateErrorMessage(err validator.FieldError) string {
 		return fmt.Sprintf("%s must be less than or equal to %s", err.Field(), err.Param())
 	default:
 		return fmt.Sprintf("%s is invalid", err.Field())
+	}
+}
+
+type ParamsListMethod struct {
+	Search *string
+	Page   *int
+	Size   *int
+	Order  *string
+	SortBy *string
+}
+
+type ResultListMethod struct {
+	Search *string
+	Page   *int
+	Size   *int
+	Order  *string
+	SortBy *string
+}
+
+func ValidationParamsListMethod(params ParamsListMethod) ResultListMethod {
+	/*
+
+		How To Use
+		params := utils.ValidationParamsListMethod(utils.ParamsListMethod{
+			Search: nil,
+			Page:   nil,
+			Size:   nil,
+			Order:  nil,
+			SortBy: nil,
+		})
+
+		fmt.Println(*params.Search)
+
+	*/
+
+	Search := ""
+	if params.Search != nil {
+		Search = *params.Search
+	} else {
+		Search = ""
+	}
+
+	Page := 0
+	if params.Page != nil {
+		Page = *params.Page
+	} else {
+		Page = 1
+	}
+
+	Size := 0
+	if params.Size != nil {
+		Size = *params.Size
+	} else {
+		Size = 1
+	}
+
+	Order := ""
+	if params.Order != nil {
+		Order = *params.Order
+	} else {
+		Order = "desc"
+	}
+
+	SortBy := ""
+	if params.SortBy != nil {
+		SortBy = *params.SortBy
+	} else {
+		SortBy = "desc"
+	}
+
+	return ResultListMethod{
+		Search: &Search,
+		Page:   &Page,
+		Size:   &Size,
+		Order:  &Order,
+		SortBy: &SortBy,
 	}
 }

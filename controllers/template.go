@@ -86,9 +86,25 @@ func TemplateUpdate(c *fiber.Ctx) error {
 
 	fmt.Println(id)
 
+	var body templateRequest
+
+	// Memvalidasi request body
+	errorsMap, err := utils.ValidateStruct(c, &body)
+	if err != nil {
+		// Jika validasi gagal, kembalikan respons yang lebih rinci
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "validation failed",
+			"errors":  errorsMap, // Mengembalikan detail kesalahan validasi
+			"status":  fiber.StatusBadRequest,
+		})
+	}
+
+	fmt.Println(body)
+
 	return c.JSON(fiber.Map{
 		"message": "Successfull to update Template",
 		"status":  200,
+		"data":    body,
 	})
 }
 
